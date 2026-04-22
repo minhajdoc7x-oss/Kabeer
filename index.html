@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Kabeer Pro CV</title>
+<title>Kabeer Mobile CV</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
 body {
     font-family: 'Segoe UI', sans-serif;
-    background: #eaeef2;
-    padding: 20px;
+    background: #eef2f3;
+    padding: 10px;
 }
 
 /* FORM */
 .form {
     background: white;
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 10px;
 }
 
 input, textarea {
@@ -29,57 +30,46 @@ input, textarea {
 }
 
 button {
+    width: 100%;
+    padding: 12px;
     background: #111;
     color: white;
-    padding: 12px;
     border: none;
     border-radius: 8px;
-    width: 100%;
-    font-weight: bold;
 }
 
-/* CV DESIGN */
+/* CV */
 #cv {
     display: none;
     background: white;
-    width: 800px;
-    margin: auto;
-    display: flex;
-    border-radius: 12px;
+    margin-top: 15px;
+    border-radius: 10px;
     overflow: hidden;
 }
 
-/* LEFT SIDE */
-.left {
-    width: 30%;
+/* TOP (mobile layout) */
+.top {
     background: #111;
     color: white;
-    padding: 20px;
     text-align: center;
-}
-
-.left img {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid white;
-    margin-bottom: 10px;
-}
-
-.left h2 {
-    margin: 10px 0;
-}
-
-.left p {
-    font-size: 14px;
-    margin: 5px 0;
-}
-
-/* RIGHT SIDE */
-.right {
-    width: 70%;
     padding: 20px;
+}
+
+.top img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid white;
+    object-fit: cover;
+}
+
+.top h2 {
+    margin: 10px 0 5px;
+}
+
+/* CONTENT */
+.content {
+    padding: 15px;
 }
 
 .section {
@@ -89,22 +79,36 @@ button {
 .section h3 {
     border-bottom: 2px solid #111;
     padding-bottom: 5px;
-    margin-bottom: 8px;
 }
 
 /* FOOTER */
 .footer {
     text-align: center;
     font-size: 12px;
-    margin-top: 10px;
     color: gray;
+    padding: 10px;
+}
+
+/* DESKTOP STYLE AUTO */
+@media(min-width:768px){
+    #cv {
+        display: flex;
+    }
+
+    .top {
+        width: 30%;
+    }
+
+    .content {
+        width: 70%;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<h2>🔥 Kabeer Pro CV Maker</h2>
+<h2>📱 Kabeer CV Maker</h2>
 
 <div class="form">
     <input type="text" id="name" placeholder="Name">
@@ -121,17 +125,14 @@ button {
 </div>
 
 <div id="cv">
-    <!-- LEFT -->
-    <div class="left">
+    <div class="top">
         <img id="cvPhoto">
         <h2 id="cvName"></h2>
         <p id="cvPhone"></p>
         <p id="cvEmail"></p>
     </div>
 
-    <!-- RIGHT -->
-    <div class="right">
-
+    <div class="content">
         <div class="section">
             <h3>Address</h3>
             <p id="cvAddress"></p>
@@ -153,18 +154,14 @@ button {
         </div>
 
         <button onclick="downloadPDF()">Download PDF</button>
-
-        <div class="footer">
-            © Kabeer
-        </div>
-
     </div>
 </div>
 
-<script>
-function generateCV() {
+<div class="footer">© Kabeer</div>
 
-    document.getElementById("cv").style.display = "flex";
+<script>
+function generateCV(){
+    document.getElementById("cv").style.display = "block";
 
     cvName.innerText = name.value;
     cvPhone.innerText = phone.value;
@@ -185,7 +182,7 @@ function generateCV() {
 }
 
 function downloadPDF(){
-    html2pdf().from(document.getElementById("cv")).save("Kabeer_Pro_CV.pdf");
+    html2pdf().from(document.getElementById("cv")).save("Kabeer_CV.pdf");
 }
 </script>
 
