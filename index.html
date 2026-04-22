@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Kabeer Pro CV</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #eaeef2;
+    padding: 20px;
+}
+
+/* FORM */
+.form {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+button {
+    background: #111;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    width: 100%;
+    font-weight: bold;
+}
+
+/* CV DESIGN */
+#cv {
+    display: none;
+    background: white;
+    width: 800px;
+    margin: auto;
+    display: flex;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* LEFT SIDE */
+.left {
+    width: 30%;
+    background: #111;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.left img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white;
+    margin-bottom: 10px;
+}
+
+.left h2 {
+    margin: 10px 0;
+}
+
+.left p {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+/* RIGHT SIDE */
+.right {
+    width: 70%;
+    padding: 20px;
+}
+
+.section {
+    margin-bottom: 15px;
+}
+
+.section h3 {
+    border-bottom: 2px solid #111;
+    padding-bottom: 5px;
+    margin-bottom: 8px;
+}
+
+/* FOOTER */
+.footer {
+    text-align: center;
+    font-size: 12px;
+    margin-top: 10px;
+    color: gray;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🔥 Kabeer Pro CV Maker</h2>
+
+<div class="form">
+    <input type="text" id="name" placeholder="Name">
+    <input type="text" id="phone" placeholder="Phone">
+    <input type="email" id="email" placeholder="Email">
+    <textarea id="address" placeholder="Address"></textarea>
+    <textarea id="education" placeholder="Education"></textarea>
+    <textarea id="skills" placeholder="Skills"></textarea>
+    <textarea id="experience" placeholder="Experience"></textarea>
+
+    <input type="file" id="photo">
+
+    <button onclick="generateCV()">Generate CV</button>
+</div>
+
+<div id="cv">
+    <!-- LEFT -->
+    <div class="left">
+        <img id="cvPhoto">
+        <h2 id="cvName"></h2>
+        <p id="cvPhone"></p>
+        <p id="cvEmail"></p>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+
+        <div class="section">
+            <h3>Address</h3>
+            <p id="cvAddress"></p>
+        </div>
+
+        <div class="section">
+            <h3>Education</h3>
+            <p id="cvEducation"></p>
+        </div>
+
+        <div class="section">
+            <h3>Skills</h3>
+            <p id="cvSkills"></p>
+        </div>
+
+        <div class="section">
+            <h3>Experience</h3>
+            <p id="cvExperience"></p>
+        </div>
+
+        <button onclick="downloadPDF()">Download PDF</button>
+
+        <div class="footer">
+            © Kabeer
+        </div>
+
+    </div>
+</div>
+
+<script>
+function generateCV() {
+
+    document.getElementById("cv").style.display = "flex";
+
+    cvName.innerText = name.value;
+    cvPhone.innerText = phone.value;
+    cvEmail.innerText = email.value;
+    cvAddress.innerText = address.value;
+    cvEducation.innerText = education.value;
+    cvSkills.innerText = skills.value;
+    cvExperience.innerText = experience.value;
+
+    let file = photo.files[0];
+    if(file){
+        let reader = new FileReader();
+        reader.onload = function(e){
+            cvPhoto.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
+function downloadPDF(){
+    html2pdf().from(document.getElementById("cv")).save("Kabeer_Pro_CV.pdf");
+}
+</script>
+
+</body>
+</html>
