@@ -1,106 +1,132 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Kabeer Mobile CV</title>
-
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<title>Best Bakery - Online Order</title>
 
 <style>
-body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #eef2f3;
-    padding: 10px;
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f7f3ee;
+    color:#333;
 }
 
-/* FORM */
-.form {
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
+header{
+    background:#6d3b1f;
+    color:white;
+    text-align:center;
+    padding:18px;
 }
 
-input, textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 6px 0;
-    border-radius: 8px;
-    border: 1px solid #ccc;
+.container{
+    max-width:1100px;
+    margin:auto;
+    padding:15px;
 }
 
-button {
-    width: 100%;
-    padding: 12px;
-    background: #111;
-    color: white;
-    border: none;
-    border-radius: 8px;
+.card{
+    background:white;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
 }
 
-/* CV */
-#cv {
-    display: none;
-    background: white;
-    margin-top: 15px;
-    border-radius: 10px;
-    overflow: hidden;
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:10px;
 }
 
-/* TOP (mobile layout) */
-.top {
-    background: #111;
-    color: white;
-    text-align: center;
-    padding: 20px;
+.item{
+    border:1px solid #ddd;
+    border-radius:10px;
+    padding:12px;
+    background:#fff;
 }
 
-.top img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 3px solid white;
-    object-fit: cover;
+.item button{
+    width:100%;
+    border:0;
+    background:#6d3b1f;
+    color:white;
+    padding:10px;
+    border-radius:7px;
+    cursor:pointer;
 }
 
-.top h2 {
-    margin: 10px 0 5px;
+.item button:active{
+    transform:scale(.97);
 }
 
-/* CONTENT */
-.content {
-    padding: 15px;
+.price{
+    color:#a44c20;
+    font-weight:bold;
+    margin:7px 0;
 }
 
-.section {
-    margin-bottom: 15px;
+.cart-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:10px 0;
+    border-bottom:1px solid #eee;
 }
 
-.section h3 {
-    border-bottom: 2px solid #111;
-    padding-bottom: 5px;
+.qty button{
+    width:32px;
+    height:32px;
+    border:0;
+    border-radius:5px;
+    background:#ddd;
+    cursor:pointer;
+    font-size:18px;
 }
 
-/* FOOTER */
-.footer {
-    text-align: center;
-    font-size: 12px;
-    color: gray;
-    padding: 10px;
+.total{
+    font-size:22px;
+    font-weight:bold;
+    color:#6d3b1f;
 }
 
-/* DESKTOP STYLE AUTO */
-@media(min-width:768px){
-    #cv {
-        display: flex;
+.primary{
+    background:#198754;
+    color:white;
+    border:0;
+    padding:13px 20px;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+    width:100%;
+}
+
+.empty{
+    text-align:center;
+    color:#777;
+    padding:20px;
+}
+
+.table-box{
+    background:#fff3df;
+    padding:12px;
+    border-radius:8px;
+    margin-bottom:15px;
+    text-align:center;
+    font-weight:bold;
+}
+
+@media(max-width:500px){
+    .grid{
+        grid-template-columns:repeat(2,1fr);
     }
 
-    .top {
-        width: 30%;
-    }
-
-    .content {
-        width: 70%;
+    .item{
+        padding:10px;
     }
 }
 </style>
@@ -108,82 +134,567 @@ button {
 
 <body>
 
-<h2>📱 Kabeer CV Maker</h2>
+<header>
+    <h1>🍰 Best Bakery</h1>
+    <p>Online Ordering</p>
+</header>
 
-<div class="form">
-    <input type="text" id="name" placeholder="Name">
-    <input type="text" id="phone" placeholder="Phone">
-    <input type="email" id="email" placeholder="Email">
-    <textarea id="address" placeholder="Address"></textarea>
-    <textarea id="education" placeholder="Education"></textarea>
-    <textarea id="skills" placeholder="Skills"></textarea>
-    <textarea id="experience" placeholder="Experience"></textarea>
+<div class="container">
 
-    <input type="file" id="photo">
-
-    <button onclick="generateCV()">Generate CV</button>
-</div>
-
-<div id="cv">
-    <div class="top">
-        <img id="cvPhoto">
-        <h2 id="cvName"></h2>
-        <p id="cvPhone"></p>
-        <p id="cvEmail"></p>
+    <div class="table-box">
+        🪑 Table <span id="tableNumber">1</span>
     </div>
 
-    <div class="content">
-        <div class="section">
-            <h3>Address</h3>
-            <p id="cvAddress"></p>
+    <div id="menuArea"></div>
+
+    <div class="card">
+
+        <h2>🛒 Your Order</h2>
+
+        <div id="cartArea">
+            <div class="empty">
+                Cart is empty
+            </div>
         </div>
 
-        <div class="section">
-            <h3>Education</h3>
-            <p id="cvEducation"></p>
+        <hr>
+
+        <div class="total">
+            Total: ₹<span id="cartTotal">0</span>
         </div>
 
-        <div class="section">
-            <h3>Skills</h3>
-            <p id="cvSkills"></p>
-        </div>
+        <br>
 
-        <div class="section">
-            <h3>Experience</h3>
-            <p id="cvExperience"></p>
-        </div>
+        <button class="primary" onclick="placeOrder()">
+            Place Order
+        </button>
 
-        <button onclick="downloadPDF()">Download PDF</button>
     </div>
+
+    <div class="card">
+
+        <h2>📋 Order Status</h2>
+
+        <div id="orderStatus">
+            No active order.
+        </div>
+
+    </div>
+
 </div>
 
-<div class="footer">© Kabeer</div>
 
 <script>
-function generateCV(){
-    document.getElementById("cv").style.display = "block";
 
-    cvName.innerText = name.value;
-    cvPhone.innerText = phone.value;
-    cvEmail.innerText = email.value;
-    cvAddress.innerText = address.value;
-    cvEducation.innerText = education.value;
-    cvSkills.innerText = skills.value;
-    cvExperience.innerText = experience.value;
+/* =========================
+   TABLE NUMBER
+========================= */
 
-    let file = photo.files[0];
-    if(file){
-        let reader = new FileReader();
-        reader.onload = function(e){
-            cvPhoto.src = e.target.result;
-        }
-        reader.readAsDataURL(file);
+const params = new URLSearchParams(window.location.search);
+
+let table = params.get("table") || "1";
+
+if(!["1","2","3","4"].includes(table)){
+    table = "1";
+}
+
+document.getElementById("tableNumber").textContent = table;
+
+
+/* =========================
+   MENU
+========================= */
+
+const menu = {
+
+    "Fresh Juice":[
+        ["Orange",70],
+        ["Musambi",70],
+        ["Grapes",70],
+        ["Pineapple",70],
+        ["Milk Lime",50],
+        ["Pineapple Lime",50]
+    ],
+
+    "Milk Shakes":[
+        ["Chikku",70],
+        ["Sharjah",80],
+        ["Mango",90],
+        ["Strawberry",90],
+        ["Avocado",100],
+        ["Shamam",100],
+        ["Tender",100],
+        ["Sitaphal",100],
+        ["Apple",100]
+    ],
+
+    "Special Shakes":[
+        ["Badam Milk",80],
+        ["Cold Coffee",80],
+        ["Snickers",120],
+        ["KitKat",120],
+        ["Oreo",80]
+    ],
+
+    "Dry Fruit Shakes":[
+        ["Dates",90],
+        ["Badam",120],
+        ["Roasted Cashew",120],
+        ["Mixed Dry Fruits",130]
+    ],
+
+    "Ice Cream Shakes":[
+        ["Vanilla Shake",90],
+        ["Strawberry Shake",90],
+        ["Pista Shake",90],
+        ["Mango Shake",90],
+        ["Chocolate Shake",90],
+        ["Butterscotch Shake",90],
+        ["Spanish Delight Shake",100]
+    ],
+
+    "Scoops":[
+        ["Vanilla",50],
+        ["Strawberry",60],
+        ["Pista",60],
+        ["Mango",60],
+        ["Chocolate",60],
+        ["Butterscotch",60],
+        ["Spanish Delight",60]
+    ],
+
+    "Icecream Specials":[
+        ["Fruit Salad",70],
+        ["Gudbud",130],
+        ["Dilkhush",160],
+        ["Fancy Falooda",160],
+        ["Royal Falooda",180],
+        ["Tender Falooda",200],
+        ["Choco Buzz",180],
+        ["Best Gudbud",200],
+        ["Brownie Fudge",200]
+    ],
+
+    "Hot Beverages":[
+        ["Tea",15],
+        ["Coffee",25],
+        ["Horlicks",30],
+        ["Boost",30]
+    ],
+
+    "Snacks":[
+        ["Chicken Puffs",20],
+        ["Egg Puffs",20],
+        ["Cutlet",20],
+        ["Rolls",25],
+        ["Buns",20],
+        ["Unniyappam",12],
+        ["Samosa Veg",12],
+        ["Samosa Chicken",15],
+        ["Ullivada",15],
+        ["Burger",25],
+        ["Cream Bun",20],
+        ["Butter Bun",20],
+        ["Sandwich",25]
+    ]
+
+};
+
+
+/* =========================
+   CART
+========================= */
+
+let cart = {};
+
+
+/* =========================
+   SHOW MENU
+========================= */
+
+function renderMenu(){
+
+    const menuArea =
+        document.getElementById("menuArea");
+
+    menuArea.innerHTML = "";
+
+    Object.keys(menu).forEach(category => {
+
+        const card =
+            document.createElement("div");
+
+        card.className = "card";
+
+        const title =
+            document.createElement("h2");
+
+        title.textContent = category;
+
+        card.appendChild(title);
+
+        const grid =
+            document.createElement("div");
+
+        grid.className = "grid";
+
+        menu[category].forEach(item => {
+
+            const name = item[0];
+            const price = item[1];
+
+            const div =
+                document.createElement("div");
+
+            div.className = "item";
+
+            const itemName =
+                document.createElement("b");
+
+            itemName.textContent = name;
+
+            const priceText =
+                document.createElement("div");
+
+            priceText.className = "price";
+
+            priceText.textContent = "₹" + price;
+
+            const button =
+                document.createElement("button");
+
+            button.textContent = "Add";
+
+            button.addEventListener(
+                "click",
+                function(){
+                    addToCart(name,price);
+                }
+            );
+
+            div.appendChild(itemName);
+            div.appendChild(priceText);
+            div.appendChild(button);
+
+            grid.appendChild(div);
+
+        });
+
+        card.appendChild(grid);
+
+        menuArea.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================
+   ADD TO CART
+========================= */
+
+function addToCart(name,price){
+
+    if(!cart[name]){
+
+        cart[name] = {
+            name:name,
+            price:price,
+            qty:0
+        };
+
     }
+
+    cart[name].qty++;
+
+    renderCart();
 }
 
-function downloadPDF(){
-    html2pdf().from(document.getElementById("cv")).save("Kabeer_CV.pdf");
+
+/* =========================
+   CHANGE QUANTITY
+========================= */
+
+function changeQty(name,value){
+
+    if(!cart[name]){
+        return;
+    }
+
+    cart[name].qty += value;
+
+    if(cart[name].qty <= 0){
+        delete cart[name];
+    }
+
+    renderCart();
 }
+
+
+/* =========================
+   CART DISPLAY
+========================= */
+
+function renderCart(){
+
+    const cartArea =
+        document.getElementById("cartArea");
+
+    const cartTotal =
+        document.getElementById("cartTotal");
+
+    const items =
+        Object.values(cart);
+
+    if(items.length === 0){
+
+        cartArea.innerHTML = `
+            <div class="empty">
+                Cart is empty
+            </div>
+        `;
+
+        cartTotal.textContent = "0";
+
+        return;
+    }
+
+    cartArea.innerHTML = "";
+
+    let total = 0;
+
+    items.forEach(item => {
+
+        const amount =
+            item.price * item.qty;
+
+        total += amount;
+
+        const row =
+            document.createElement("div");
+
+        row.className = "cart-row";
+
+        const name =
+            document.createElement("div");
+
+        name.innerHTML =
+            `<b>${item.name}</b><br>
+             ₹${item.price} × ${item.qty}`;
+
+        const controls =
+            document.createElement("div");
+
+        controls.className = "qty";
+
+        const minus =
+            document.createElement("button");
+
+        minus.textContent = "−";
+
+        minus.onclick = function(){
+            changeQty(item.name,-1);
+        };
+
+        const qty =
+            document.createElement("span");
+
+        qty.textContent = " " + item.qty + " ";
+
+        const plus =
+            document.createElement("button");
+
+        plus.textContent = "+";
+
+        plus.onclick = function(){
+            changeQty(item.name,1);
+        };
+
+        controls.appendChild(minus);
+        controls.appendChild(qty);
+        controls.appendChild(plus);
+
+        const amountText =
+            document.createElement("b");
+
+        amountText.textContent =
+            "₹" + amount;
+
+        row.appendChild(name);
+        row.appendChild(controls);
+        row.appendChild(amountText);
+
+        cartArea.appendChild(row);
+
+    });
+
+    cartTotal.textContent = total;
+
+}
+
+
+/* =========================
+   PLACE ORDER
+========================= */
+
+function placeOrder(){
+
+    const items =
+        Object.values(cart);
+
+    if(items.length === 0){
+
+        alert("Please select items first.");
+
+        return;
+    }
+
+    let total = 0;
+
+    items.forEach(item => {
+
+        total +=
+            item.price * item.qty;
+
+    });
+
+    const order = {
+
+        orderNumber:
+            "BK" +
+            Date.now().toString().slice(-6),
+
+        table:table,
+
+        items:items,
+
+        total:total,
+
+        status:"Order Received",
+
+        time:new Date().toLocaleString()
+
+    };
+
+
+    /*
+       TEMPORARY STORAGE
+
+       Firebase will be connected later.
+    */
+
+    localStorage.setItem(
+        "bakeryCurrentOrder",
+        JSON.stringify(order)
+    );
+
+    document.getElementById("orderStatus")
+        .innerHTML = `
+
+            <p>
+                <b>Order No:</b>
+                ${order.orderNumber}
+            </p>
+
+            <p>
+                <b>Table:</b>
+                ${order.table}
+            </p>
+
+            <p>
+                <b>Total:</b>
+                ₹${order.total}
+            </p>
+
+            <p>
+                <b>Status:</b>
+                🟡 ${order.status}
+            </p>
+
+            <p>
+                Thank you! Your order has been received.
+            </p>
+
+        `;
+
+
+    cart = {};
+
+    renderCart();
+
+    alert(
+        "✅ Order placed successfully!\n" +
+        "Order No: " +
+        order.orderNumber
+    );
+
+}
+
+
+/* =========================
+   LOAD PREVIOUS ORDER
+========================= */
+
+function loadPreviousOrder(){
+
+    const saved =
+        localStorage.getItem(
+            "bakeryCurrentOrder"
+        );
+
+    if(!saved){
+        return;
+    }
+
+    try{
+
+        const order =
+            JSON.parse(saved);
+
+        document.getElementById("orderStatus")
+            .innerHTML = `
+
+                <p>
+                    <b>Order No:</b>
+                    ${order.orderNumber}
+                </p>
+
+                <p>
+                    <b>Table:</b>
+                    ${order.table}
+                </p>
+
+                <p>
+                    <b>Total:</b>
+                    ₹${order.total}
+                </p>
+
+                <p>
+                    <b>Status:</b>
+                    🟡 ${order.status}
+                </p>
+
+            `;
+
+    }catch(error){
+
+        console.log(error);
+
+    }
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+renderMenu();
+
+renderCart();
+
+loadPreviousOrder();
+
 </script>
 
 </body>
