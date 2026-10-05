@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bakery - Kitchen Dashboard</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#2c3e50;color:#fff;padding:20px}
+h1{text-align:center;margin-bottom:20px}
+.tables-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.table-card{background:#fff;color:#333;border-radius:10px;padding:15px;box-shadow:0 4px 8px rgba(0,0,0,0.2)}
+.table-header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #eee;padding-bottom:10px}
+.table-title{font-size:20px;font-weight:bold;color:#6d3b1f}
+.status-tag{padding:4px 8px;border-radius:5px;font-size:12px;font-weight:bold;background:#ffc107;color:#000}
+.item-list{margin:15px 0;padding:0;list-style:none}
+.item-list li{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed #eee;font-size:15px}
+.total-price{font-size:18px;font-weight:bold;text-align:right;color:#198754;margin-top:10px}
+.btn-complete{width:100%;background:#198754;color:white;border:none;padding:10px;border-radius:5px;font-weight:bold;cursor:pointer;margin-top:10px}
+</style>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+</head>
+<body>
+
+<h1>👨‍🍳 Kitchen Live Orders</h1>
+
+<div class="tables-grid" id="ordersGrid">
+    <!-- Orders dynamically load here -->
+</div>
+
+<script>
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+// Listen to orders realtime
+database.ref('orders').on('value', (snapshot) => {
+    const ordersGrid = document.getElementById("ordersGrid");
+    ordersGrid.innerHTML = "";
+    
+    const data = snapshot.val();
+    if(!data) {
+        ordersGrid.innerHTML = "<p>No active orders.</p>";
+        return;
+    }
+
+    Object.keys(data).forEach(key => {
+        const order = data[key];
+        
+        // Show active orders only
+        if(order.status !== "Completed") {
+            const card = document.createElement("div");
+            card.className = "table-card";
+            
+            let itemsHTML = "";
+            order.items.forEach(item => {
+                itemsHTML += `<li><span>${item.name} x ${item.qty}</span> <span>₹${item.price * item.qty}</span></li>`;
+            });
+
+            card.innerHTML = `
+                <div class="table-header">
+                    <span class="table-title">🪑 Table ${order.table}</span>
+                    <span class="status-tag">${order.time}</span>
+                </div>
+                <p><small>Order ID: ${order.orderId}</small></p>
+                <ul class="item-list">
+                    ${itemsHTML}
+                </ul>
+                <div class="total-price">Total: ₹${order.total}</div>
+                <button class="btn-complete" onclick="markComplete('${key}')">Complete Order</button>
+            `;
+            ordersGrid.appendChild(card);
+        }
+    });
+});
+
+function markComplete(orderId){
+    database.ref('orders/' + orderId).update({ status: "Completed" });
+}
+</script>
+</body>
+</html>
